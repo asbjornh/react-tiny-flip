@@ -3,15 +3,7 @@ import * as React from "react";
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
 
-const isSameChildren = (oldChildren, newChildren) =>
-  oldChildren.every((child, index) => child.key === newChildren[index].key);
-
 type ElementDict = { [key: string]: HTMLElement };
-const measureElements = (elements: ElementDict) =>
-  Object.entries(elements).reduce((accum, [key, element]) => {
-    const rect = element.getBoundingClientRect();
-    return Object.assign(accum, { [key]: rect });
-  }, {});
 
 const stripNull = (elements: ElementDict) =>
   Object.entries(elements).reduce((accum, [key, element]) => {
@@ -34,64 +26,47 @@ const TinyFlip: React.FunctionComponent<Props> = ({
   childElement,
   element
 }) => {
-  const [childs, setChilds] = React.useState(children);
   const elements: React.MutableRefObject<ElementDict> = React.useRef({});
   const positions = React.useRef({});
   const raf: React.MutableRefObject<number> = React.useRef();
 
-  const shouldTransition = React.useRef(false);
-
-  React.useEffect(() => {
-    elements.current = stripNull(elements.current);
-    if (
-      children.length !== childs.length ||
-      !isSameChildren(childs, children)
-    ) {
-      positions.current = measureElements(elements.current);
-      shouldTransition.current = true;
-      setChilds(children);
-    } else {
-      setChilds(children);
-    }
-  }, [children]);
-
   useIsomorphicLayoutEffect(() => {
-    if (shouldTransition.current) {
-      shouldTransition.current = false;
-      cancelAnimationFrame(raf.current);
+    cancelAnimationFrame(raf.current);
+    elements.current = stripNull(elements.current);
 
-      Object.entries(elements.current).forEach(([key, element]) => {
-        const oldPos = positions.current[key];
+    Object.entries(elements.current).forEach(([key, element]) => {
+      // If the element is 'null' it has unmounted
+      if (!element) return;
 
-        // If the element is 'null' it has unmounted
-        if (!element) return;
+      const oldPos = positions.current[key];
+      const newPos = element.getBoundingClientRect();
 
-        if (oldPos) {
-          const newPos = element.getBoundingClientRect();
-          const xDiff = newPos.left - oldPos.left;
-          const yDiff = newPos.top - oldPos.top;
+      if (oldPos) {
+        const xDiff = newPos.left - oldPos.left;
+        const yDiff = newPos.top - oldPos.top;
 
-          element.style.transform = `translate(${-xDiff}px, ${-yDiff}px) scale(1)`;
-        } else {
-          // If the element has no old position it is new since last render
-          element.style.transform = "scale(0.1)";
-        }
+        element.style.transform = `translate(${-xDiff}px, ${-yDiff}px) scale(1)`;
+      } else {
+        // If the element has no old position it is new since last render
+        element.style.transform = "scale(0.1)";
+      }
 
-        raf.current = requestAnimationFrame(() => {
-          element.style.transition = "transform 0.5s ease-out";
-          element.style.transform = "translate(0, 0) scale(1)";
-          setTimeout(() => (element.style.transition = "none"), 500);
-        });
+      positions.current[key] = newPos;
+
+      raf.current = requestAnimationFrame(() => {
+        element.style.transition = "transform 0.5s ease-out";
+        element.style.transform = "translate(0, 0) scale(1)";
+        setTimeout(() => (element.style.transition = "none"), 500);
       });
-    }
-  });
+    });
+  }, [children]);
 
   React.useEffect(() => () => cancelAnimationFrame(raf.current), []);
 
   return React.createElement(
     element || "div",
     { className },
-    React.Children.map(childs, child =>
+    React.Children.map(children, child =>
       React.createElement(
         childElement || "div",
         {
