@@ -1,0 +1,10 @@
+html {
+  font-family: sans-serif;
+}
+
+.flip {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 50px;
+  width: 100px;
+}

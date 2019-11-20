@@ -1,0 +1,9 @@
+{
+  "include": ["source"],
+  "compilerOptions": {
+    "declaration": true,
+    "module": "commonjs",
+    "jsx": "react",
+    "outDir": "lib"
+  }
+}

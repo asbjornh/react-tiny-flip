@@ -1,0 +1,41 @@
+{
+  "name": "react-tiny-flip",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "webpack-dev-server --mode=development",
+    "lint": "eslint --ext js,jsx ./source",
+    "lint:fix": "eslint --ext js,jsx ./source --fix",
+    "test": "ava"
+  },
+  "author": "Asbjørn Hegdahl",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asbjornh/react-tiny-flip.git"
+  },
+  "bugs": {
+    "url": "https://github.com/asbjornh/react-tiny-flip/issues"
+  },
+  "dependencies": {
+    "tiny-spring": "^0.3.0"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.11",
+    "ava": "^2.4.0",
+    "css-loader": "^2.0.0",
+    "css-transform-string": "^2.1.0",
+    "html-webpack-plugin": "^3.2.0",
+    "mini-css-extract-plugin": "^0.5.0",
+    "prettier": "^1.9.2",
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.6.4",
+    "webpack": "^4.10.1",
+    "webpack-cli": "^3.0.2",
+    "webpack-dev-server": "^3.1.4"
+  }
+}
