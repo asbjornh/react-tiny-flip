@@ -11,11 +11,21 @@ const stripNull = (elements: ElementDict) =>
     return Object.assign(accum, { [key]: element });
   }, {});
 
+const transitionString = (duration, easing) =>
+  `transform ${duration / 1000}s ${easing}`;
+
+const clearStyles = element => {
+  element.style.transform = "";
+  element.style.transition = "";
+};
+
 type Props = {
   children: React.ReactElement[];
   className?: string;
   childClassName?: string;
   childElement?: string;
+  duration?: number;
+  easing?: string;
   element?: string;
 };
 
@@ -24,19 +34,22 @@ const TinyFlip: React.FunctionComponent<Props> = ({
   className,
   childClassName,
   childElement,
+  duration,
+  easing,
   element
 }) => {
   const elements: React.MutableRefObject<ElementDict> = React.useRef({});
   const positions = React.useRef({});
   const raf: React.MutableRefObject<number> = React.useRef();
+  const timer: React.MutableRefObject<any> = React.useRef();
 
   useIsomorphicLayoutEffect(() => {
     cancelAnimationFrame(raf.current);
+    clearTimeout(timer.current);
     elements.current = stripNull(elements.current);
 
     Object.entries(elements.current).forEach(([key, element]) => {
-      // If the element is 'null' it has unmounted
-      if (!element) return;
+      clearStyles(element);
 
       const oldPos = positions.current[key];
       const newPos = element.getBoundingClientRect();
@@ -53,15 +66,25 @@ const TinyFlip: React.FunctionComponent<Props> = ({
 
       positions.current[key] = newPos;
 
+      const dur = duration || 500;
+      const ease = easing || "cubic-bezier(0.3,0,0,1)";
+
       raf.current = requestAnimationFrame(() => {
-        element.style.transition = "transform 0.5s ease-out";
+        element.style.transition = transitionString(dur, ease);
         element.style.transform = "translate(0, 0) scale(1)";
-        setTimeout(() => (element.style.transition = "none"), 500);
+
+        timer.current = setTimeout(() => clearStyles(element), dur);
       });
     });
   }, [children]);
 
-  React.useEffect(() => () => cancelAnimationFrame(raf.current), []);
+  React.useEffect(
+    () => () => {
+      cancelAnimationFrame(raf.current);
+      clearTimeout(timer.current);
+    },
+    []
+  );
 
   return React.createElement(
     element || "div",
