@@ -5939,11 +5939,6 @@ timers-browserify@^2.0.4:
   dependencies:
     setimmediate "^1.0.4"
 
-tiny-spring@^0.3.0:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/tiny-spring/-/tiny-spring-0.3.1.tgz#4b80bc096de5cf21a18635ae1842bb54da65489f"
-  integrity sha512-9wVwRSMto17Ez92SqPenQLc85pxSX4SN/1HDiDO/fedrPlkkLA9tnSinHUyo+0QJNSwxISjI7laZPOe6UwnkTg==
-
 to-arraybuffer@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/to-arraybuffer/-/to-arraybuffer-1.0.1.tgz#7d229b1fcc637e466ca081180836a7aabff83f43"

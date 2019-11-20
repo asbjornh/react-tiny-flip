@@ -19,9 +19,7 @@
   "bugs": {
     "url": "https://github.com/asbjornh/react-tiny-flip/issues"
   },
-  "dependencies": {
-    "tiny-spring": "^0.3.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/react": "^16.9.11",
     "ava": "^2.4.0",
