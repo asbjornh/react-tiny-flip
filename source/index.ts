@@ -1,5 +1,8 @@
 import * as React from "react";
 
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
+
 const isSameChildren = (oldChildren, newChildren) =>
   oldChildren.every((child, index) => child.key === newChildren[index].key);
 
@@ -20,12 +23,16 @@ type Props = {
   children: React.ReactElement[];
   className?: string;
   childClassName?: string;
+  childElement?: string;
+  element?: string;
 };
 
 const TinyFlip: React.FunctionComponent<Props> = ({
   children,
   className,
-  childClassName
+  childClassName,
+  childElement,
+  element
 }) => {
   const [childs, setChilds] = React.useState(children);
   const elements: React.MutableRefObject<ElementDict> = React.useRef({});
@@ -48,7 +55,7 @@ const TinyFlip: React.FunctionComponent<Props> = ({
     }
   }, [children]);
 
-  React.useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (shouldTransition.current) {
       shouldTransition.current = false;
       cancelAnimationFrame(raf.current);
@@ -81,17 +88,19 @@ const TinyFlip: React.FunctionComponent<Props> = ({
 
   React.useEffect(() => () => cancelAnimationFrame(raf.current), []);
 
-  return (
-    <div className={className}>
-      {React.Children.map(childs, child => (
-        <div
-          className={childClassName}
-          ref={el => (elements.current[child.key] = el)}
-        >
-          {child}
-        </div>
-      ))}
-    </div>
+  return React.createElement(
+    element || "div",
+    { className },
+    React.Children.map(childs, child =>
+      React.createElement(
+        childElement || "div",
+        {
+          className: childClassName,
+          ref: el => (elements.current[child.key] = el)
+        },
+        child
+      )
+    )
   );
 };
 
