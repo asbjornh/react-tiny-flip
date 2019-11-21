@@ -2,14 +2,6 @@
 
 `react-tiny-flip` automatically animates changes to its children using the [FLIP technique](https://aerotwist.com/blog/flip-your-animations/) and CSS transitions.
 
-## Tradeoffs
-
-There are lots great alternatives to this library out there and I've used many of them. What currently sets `react-tiny-flip` apart from many of these is its size (at ~ 2.5kB / ~900b gzipped). Naturally, you don't get that small size without any tradeoffs. Here are the most notable ones compared to other libraries:
-
-- Interrupts: `react-tiny-flip` doesn't handle interruptions to currently running animations apart from aborting them immediately and starting a new one. This means that if the children passed to `react-tiny-flip` are changed more frequently than the duration of the animation some stuttering will occur.
-- Unmounting children: unmounted children disappear immediately without any transition. Siblings of the unmounted children animate as normal.
-- Dimensions: `react-tiny-flip` only animates the positions of elements, not dimensions (`height` or `width`)
-
 ## Basic usage
 
 ```jsx
@@ -25,6 +17,14 @@ const SomeComponent = ({ list }) => (
 ```
 
 Whenever `list` changes (new elements, removed elements, new order) the change will be animated. `Flip` outputs extra elements in the DOM: a root element and a wrapper element around each child.
+
+## Tradeoffs
+
+There are lots great alternatives to this library out there and I've used many of them. What currently sets `react-tiny-flip` apart from many of these is its size (at ~ 2.5kB / ~900b gzipped). Naturally, you don't get that small size without any tradeoffs. Here are the most notable ones compared to other libraries:
+
+- Interrupts: `react-tiny-flip` doesn't handle interruptions to currently running animations apart from aborting them immediately and starting a new one. This means that if the children passed to `react-tiny-flip` are changed more frequently than the duration of the animation some stuttering will occur.
+- Unmounting children: unmounted children disappear immediately without any transition. Siblings of the unmounted children animate as normal.
+- Dimensions: `react-tiny-flip` only animates the positions of elements, not dimensions (`height` or `width`)
 
 ## API
 
