@@ -12,12 +12,12 @@ const clearStyles = element => {
 
 type Props = {
   children: React.ReactElement[];
-  className?: string;
-  childClassName?: string;
   childElement?: string;
+  childProps?: object;
   duration?: number;
   easing?: string;
   element?: string;
+  elementProps?: object;
 };
 
 const TinyFlip: React.FunctionComponent<Props> = props => {
@@ -78,14 +78,13 @@ const TinyFlip: React.FunctionComponent<Props> = props => {
 
   return React.createElement(
     props.element || "div",
-    { className: props.className },
+    props.elementProps,
     React.Children.map(props.children, child =>
       React.createElement(
         props.childElement || "div",
-        {
-          className: props.childClassName,
+        Object.assign({}, props.childProps, {
           ref: el => (elements.current[child.key] = el)
-        },
+        }),
         child
       )
     )

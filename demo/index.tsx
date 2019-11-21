@@ -34,7 +34,11 @@ const Index = () => {
       <button onClick={add}>Add</button>
       <button onClick={remove}>Remove</button>
       <button onClick={shuffle}>Shuffle</button>
-      <TinyFlip className="flip" childClassName="flip-child">
+      <TinyFlip
+        element="ul"
+        childElement="li"
+        elementProps={{ className: "flip" }}
+      >
         {list.map(el => (
           <div key={el.key}>{el.value}</div>
         ))}
