@@ -1,7 +1,14 @@
 {
   "name": "react-tiny-flip",
   "version": "0.1.0",
-  "description": "",
+  "description": "A React component that automatically animates changes in children",
+  "keywords": [
+    "react",
+    "animation",
+    "transition",
+    "flip",
+    "children"
+  ],
   "main": "index.js",
   "scripts": {
     "build": "tsc",
