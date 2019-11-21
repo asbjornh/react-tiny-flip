@@ -9,7 +9,7 @@
     "flip",
     "children"
   ],
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "build": "tsc",
     "dev": "webpack-dev-server --mode=development"
