@@ -1,5 +1,9 @@
 # react-tiny-flip
 
+[![npm version](https://img.shields.io/npm/v/react-tiny-flip)](https://npmjs.com/package/react-tiny-flip)
+![](https://img.shields.io/badge/dependencies-zero-green)
+![](https://img.shields.io/bundlephobia/min/react-tiny-flip)
+
 `react-tiny-flip` automatically animates changes to its children using the [FLIP technique](https://aerotwist.com/blog/flip-your-animations/) and CSS transitions.
 
 ## Basic usage
