@@ -25,6 +25,7 @@ const TinyFlip: React.FunctionComponent<Props> = props => {
   const positions = React.useRef({});
   const raf: React.MutableRefObject<number> = React.useRef();
   const timer: React.MutableRefObject<any> = React.useRef();
+  const initialized = React.useRef(false);
 
   useIsomorphicLayoutEffect(() => {
     cancelAnimationFrame(raf.current);
@@ -46,7 +47,7 @@ const TinyFlip: React.FunctionComponent<Props> = props => {
         const yDiff = newPos.top - oldPos.top;
 
         el.style.transform = `translate(${-xDiff}px, ${-yDiff}px) scale(1)`;
-      } else {
+      } else if (initialized.current) {
         // If the element has no old position it is new since last render
         el.style.transform = "translate(0, 0) scale(0.1)";
       }
@@ -54,6 +55,7 @@ const TinyFlip: React.FunctionComponent<Props> = props => {
       positions.current[key] = newPos;
     });
 
+    initialized.current = true;
     raf.current = requestAnimationFrame(() => {
       const dur = props.duration || 500;
       const ease = props.easing || "cubic-bezier(0.3,0,0,1)";
