@@ -20,15 +20,7 @@ type Props = {
   element?: string;
 };
 
-const TinyFlip: React.FunctionComponent<Props> = ({
-  children,
-  className,
-  childClassName,
-  childElement,
-  duration,
-  easing,
-  element
-}) => {
+const TinyFlip: React.FunctionComponent<Props> = props => {
   const elements: React.MutableRefObject<ElementDict> = React.useRef({});
   const positions = React.useRef({});
   const raf: React.MutableRefObject<number> = React.useRef();
@@ -61,8 +53,8 @@ const TinyFlip: React.FunctionComponent<Props> = ({
 
       positions.current[key] = newPos;
 
-      const dur = duration || 500;
-      const ease = easing || "cubic-bezier(0.3,0,0,1)";
+      const dur = props.duration || 500;
+      const ease = props.easing || "cubic-bezier(0.3,0,0,1)";
 
       raf.current = requestAnimationFrame(() => {
         element.style.transition = `transform ${dur / 1000}s ${ease}`;
@@ -71,7 +63,7 @@ const TinyFlip: React.FunctionComponent<Props> = ({
         timer.current = setTimeout(() => clearStyles(element), dur);
       });
     });
-  }, [children]);
+  }, [props.children]);
 
   React.useEffect(
     () => () => {
@@ -82,13 +74,13 @@ const TinyFlip: React.FunctionComponent<Props> = ({
   );
 
   return React.createElement(
-    element || "div",
-    { className },
-    React.Children.map(children, child =>
+    props.element || "div",
+    { className: props.className },
+    React.Children.map(props.children, child =>
       React.createElement(
-        childElement || "div",
+        props.childElement || "div",
         {
-          className: childClassName,
+          className: props.childClassName,
           ref: el => (elements.current[child.key] = el)
         },
         child
