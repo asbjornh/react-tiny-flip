@@ -5,15 +5,6 @@ const useIsomorphicLayoutEffect =
 
 type ElementDict = { [key: string]: HTMLElement };
 
-const stripNull = (elements: ElementDict) =>
-  Object.entries(elements).reduce((accum, [key, element]) => {
-    if (!element) return accum;
-    return Object.assign(accum, { [key]: element });
-  }, {});
-
-const transitionString = (duration, easing) =>
-  `transform ${duration / 1000}s ${easing}`;
-
 const clearStyles = element => {
   element.style.transform = "";
   element.style.transition = "";
@@ -46,9 +37,13 @@ const TinyFlip: React.FunctionComponent<Props> = ({
   useIsomorphicLayoutEffect(() => {
     cancelAnimationFrame(raf.current);
     clearTimeout(timer.current);
-    elements.current = stripNull(elements.current);
 
     Object.entries(elements.current).forEach(([key, element]) => {
+      if (!element) {
+        delete elements.current[key];
+        return;
+      }
+
       clearStyles(element);
 
       const oldPos = positions.current[key];
@@ -70,7 +65,7 @@ const TinyFlip: React.FunctionComponent<Props> = ({
       const ease = easing || "cubic-bezier(0.3,0,0,1)";
 
       raf.current = requestAnimationFrame(() => {
-        element.style.transition = transitionString(dur, ease);
+        element.style.transition = `transform ${dur / 1000}s ${ease}`;
         element.style.transform = "translate(0, 0) scale(1)";
 
         timer.current = setTimeout(() => clearStyles(element), dur);
