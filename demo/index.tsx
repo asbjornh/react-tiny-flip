@@ -37,6 +37,7 @@ const Index = () => {
       <TinyFlip
         element="ul"
         childElement="li"
+        childProps={list.map((el, i) => ({ className: `${el.value}-${i}` }))}
         elementProps={{ className: "flip" }}
       >
         {list.map(el => (
