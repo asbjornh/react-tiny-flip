@@ -65,16 +65,14 @@ const TinyFlip: React.FunctionComponent<Props> = props => {
     initialized.current = true;
     raf.current = requestAnimationFrame(() => {
       raf.current = requestAnimationFrame(() => {
-        const dur = props.duration || 500;
-        const ease = props.easing || "cubic-bezier(0.3,0,0,1)";
         Object.values(elements.current).forEach(el => {
-          el.style.transition = `transform ${dur / 1000}s ${ease}`;
+          el.style.transition = `transform ${props.duration}ms ${props.easing}`;
           el.style.transform = "translate(0, 0) scale(1)";
         });
 
         timer.current = setTimeout(() => {
           Object.values(elements.current).forEach(clearStyles);
-        }, dur);
+        }, props.duration);
       });
     });
   }, [props.children, props.duration, props.easing]);
@@ -88,7 +86,7 @@ const TinyFlip: React.FunctionComponent<Props> = props => {
   );
 
   return React.createElement(
-    props.element || "div",
+    props.element,
     props.elementProps,
     React.Children.map(props.children, (child, index) => {
       const childProps = Array.isArray(props.childProps)
@@ -96,12 +94,19 @@ const TinyFlip: React.FunctionComponent<Props> = props => {
         : props.childProps;
       const ref = el => (elements.current[child.key] = el);
       return React.createElement(
-        props.childElement || "div",
+        props.childElement,
         Object.assign({}, childProps, { ref }),
         child
       );
     })
   );
+};
+
+TinyFlip.defaultProps = {
+  duration: 500,
+  easing: "cubic-bezier(0.3,0,0,1)",
+  element: "div",
+  childElement: "div"
 };
 
 export default TinyFlip;
