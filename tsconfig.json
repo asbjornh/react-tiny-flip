@@ -1,6 +1,7 @@
 {
   "include": ["source"],
   "compilerOptions": {
+    "removeComments": true,
     "declaration": true,
     "module": "commonjs",
     "jsx": "react",

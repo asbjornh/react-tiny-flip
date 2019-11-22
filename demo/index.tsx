@@ -3,6 +3,7 @@ import * as React from "react";
 import TinyFlip from "../source/index";
 
 const Index = () => {
+  const [state, setState] = React.useState(false);
   const [list, setList] = React.useState([
     { key: 1, value: "a" },
     { key: 2, value: "b" },
@@ -26,8 +27,13 @@ const Index = () => {
       return [...list.slice(0, i), ...list.slice(i + 1)];
     });
 
-  const shuffle = () =>
+  const shuffle = () => {
     setList(list => [...list.sort(() => (Math.random() > 0.5 ? 1 : -1))]);
+    requestAnimationFrame(() => {
+      // Trigger a re-render to make sure that animations aren't broken by re-renders where children are unchanged
+      setState(state => !state);
+    });
+  };
 
   return (
     <div>

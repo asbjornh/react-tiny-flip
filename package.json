@@ -1,6 +1,6 @@
 {
   "name": "react-tiny-flip",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A React component that automatically animates changes in children",
   "keywords": [
     "react",
@@ -12,6 +12,7 @@
   "main": "lib/index.js",
   "files": [
     "lib",
+    "CHANGELOG.md",
     "LICENSE",
     "README.md"
   ],

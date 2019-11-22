@@ -20,7 +20,11 @@ type Props = {
   elementProps?: object;
 };
 
+const isSame = (a, b) =>
+  a.length === b.length && a.every((c, i) => c.key === b[i].key);
+
 const TinyFlip: React.FunctionComponent<Props> = props => {
+  const children = React.useRef([]);
   const elements: React.MutableRefObject<ElementDict> = React.useRef({});
   const positions = React.useRef({});
   const raf: React.MutableRefObject<number> = React.useRef();
@@ -28,6 +32,10 @@ const TinyFlip: React.FunctionComponent<Props> = props => {
   const initialized = React.useRef(false);
 
   useIsomorphicLayoutEffect(() => {
+    // NOTE: Ensures that animations are not aborted if children are unchanged
+    if (isSame(children.current, props.children)) return;
+
+    children.current = props.children;
     cancelAnimationFrame(raf.current);
     clearTimeout(timer.current);
 
@@ -38,7 +46,6 @@ const TinyFlip: React.FunctionComponent<Props> = props => {
       }
 
       clearStyles(el);
-
       const oldPos = positions.current[key];
       const newPos = el.getBoundingClientRect();
 
@@ -57,16 +64,18 @@ const TinyFlip: React.FunctionComponent<Props> = props => {
 
     initialized.current = true;
     raf.current = requestAnimationFrame(() => {
-      const dur = props.duration || 500;
-      const ease = props.easing || "cubic-bezier(0.3,0,0,1)";
-      Object.values(elements.current).forEach(el => {
-        el.style.transition = `transform ${dur / 1000}s ${ease}`;
-        el.style.transform = "translate(0, 0) scale(1)";
-      });
+      raf.current = requestAnimationFrame(() => {
+        const dur = props.duration || 500;
+        const ease = props.easing || "cubic-bezier(0.3,0,0,1)";
+        Object.values(elements.current).forEach(el => {
+          el.style.transition = `transform ${dur / 1000}s ${ease}`;
+          el.style.transform = "translate(0, 0) scale(1)";
+        });
 
-      timer.current = setTimeout(() => {
-        Object.values(elements.current).forEach(clearStyles);
-      }, dur);
+        timer.current = setTimeout(() => {
+          Object.values(elements.current).forEach(clearStyles);
+        }, dur);
+      });
     });
   }, [props.children, props.duration, props.easing]);
 
